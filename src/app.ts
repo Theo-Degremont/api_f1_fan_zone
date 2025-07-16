@@ -7,6 +7,7 @@ import { PrismaClient } from '@prisma/client';
 
 // Routes
 import newsRoutes from './routes/news.routes';
+import userRoutes from './routes/user.routes';
 
 const prisma = new PrismaClient();
 const app = Fastify({ logger: true });
@@ -19,6 +20,7 @@ app.register(fastifyJwt, {
 
 // Register routes
 app.register(newsRoutes);
+app.register(userRoutes, { prefix: '/api' });
 
 // Connect to MongoDB
 const connectMongo = async () => {
