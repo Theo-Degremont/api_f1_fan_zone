@@ -12,6 +12,7 @@ import userRoutes from './routes/user.routes';
 import authRoutes from './routes/auth.routes';
 import teamRoutes from './routes/team.routes';
 import driverRoutes from './routes/driver.routes';
+import raceRoutes from './routes/race.routes';
 
 const prisma = new PrismaClient();
 const app = Fastify({ logger: true });
@@ -36,6 +37,7 @@ app.register(userRoutes, { prefix: '/api' });
 app.register(authRoutes, { prefix: '/api' });
 app.register(teamRoutes, { prefix: '/api' });
 app.register(driverRoutes, { prefix: '/api' });
+app.register(raceRoutes, { prefix: '/api' });
 
 
 // Connect to MongoDB
