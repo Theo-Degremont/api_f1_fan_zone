@@ -8,63 +8,66 @@ datasource db {
 }
 
 model User {
-  id                 Int       @id @default(autoincrement())
-  username           String    @db.VarChar(50)
-  email              String    @db.VarChar(255)
-  password           String    @db.VarChar(255)
+  id                 Int         @id @default(autoincrement())
+  username           String      @db.VarChar(50)
+  email              String      @db.VarChar(255)
+  password           String      @db.VarChar(255)
   favorite_team_id   Int?
   favorite_driver_id Int?
-  created_at         DateTime  @default(now())
+  created_at         DateTime    @default(now())
   modified_at        DateTime?
   game_scores        GameScore[]
 }
 
 model Driver {
-  id         Int       @id @default(autoincrement())
-  username   String    @db.VarChar(50)
-  email      String    @db.VarChar(255)
-  password   String    @db.VarChar(255)
-  favorite_team_id   Int?
-  favorite_driver_id Int?
-  created_at DateTime @default(now())
-  modified_at DateTime?
-  race_results RaceResult[]
+  id              Int          @id @default(autoincrement())
+  name            String       @db.VarChar(255)
+  nb_championship Int
+  nb_pole         Int
+  nb_race         Int
+  nb_victory      Int
+  number          Int
+  surname         String       @db.VarChar(255)
+  current_team_id Int?
+  previous_teams  Int[]
+  current_team    Team?        @relation("CurrentTeamDrivers", fields: [current_team_id], references: [id])
+  race_results    RaceResult[]
 }
 
 model Team {
-  id               Int      @id @default(autoincrement())
-  name             String   @db.VarChar(50)
-  date_start       DateTime
-  date_end         DateTime
-  nb_victory       Int
-  nb_run           Int
-  color            String   @db.VarChar(50)
-  nb_championship  Int
+  id              Int       @id @default(autoincrement())
+  name            String    @db.VarChar(255)
+  date_start      DateTime
+  date_end        DateTime?
+  nb_victory      Int
+  color           String    @db.VarChar(7)
+  nb_championship Int
+  nb_race         Int
+  current_drivers Driver[]  @relation("CurrentTeamDrivers")
 }
 
 model Race {
-  id          Int      @id @default(autoincrement())
-  race_name   String   @db.VarChar(100)
-  track_name  String   @db.VarChar(100)
-  country     String?  @db.VarChar(100)
-  city        String   @db.VarChar(100)
-  started_at  DateTime
-  nb_laps     Int
-  nb_curve    Int?
-  duration    Int?
+  id           Int          @id @default(autoincrement())
+  race_name    String       @db.VarChar(100)
+  track_name   String       @db.VarChar(100)
+  country      String?      @db.VarChar(100)
+  city         String       @db.VarChar(100)
+  started_at   DateTime
+  nb_laps      Int
+  nb_curve     Int?
+  duration     Int?
   race_results RaceResult[]
 }
 
 model RaceResult {
-  id           Int       @id @default(autoincrement())
-  race_id      Int
-  driver_id    Int
-  position     Int
-  points       Int
-  fastest_lap  DateTime
-
-  race   Race   @relation(fields: [race_id], references: [id])
-  driver Driver @relation(fields: [driver_id], references: [id])
+  id          Int      @id @default(autoincrement())
+  race_id     Int
+  driver_id   Int
+  position    Int
+  points      Int
+  fastest_lap DateTime
+  driver      Driver   @relation(fields: [driver_id], references: [id])
+  race        Race     @relation(fields: [race_id], references: [id])
 }
 
 model GameScore {
@@ -72,6 +75,5 @@ model GameScore {
   user_id    Int
   score_ms   Int
   created_at DateTime @default(now())
-
-  user User @relation(fields: [user_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id])
 }
