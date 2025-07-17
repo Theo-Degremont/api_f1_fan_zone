@@ -9,6 +9,7 @@ import { validateApiKey } from './middlewares/apiKey.middleware';
 // Routes
 import newsRoutes from './routes/news.routes';
 import dailyQuestionsRoutes from './routes/daily_questions.routes';
+import answerUserRoutes from './routes/answerUser.routes';
 import userRoutes from './routes/user.routes';
 import authRoutes from './routes/auth.routes';
 import teamRoutes from './routes/team.routes';
@@ -36,6 +37,7 @@ app.get('/health', async (request, reply) => {
 
 app.register(newsRoutes, { prefix: '/api' });
 app.register(dailyQuestionsRoutes, { prefix: '/api' });
+app.register(answerUserRoutes, { prefix: '/api' });
 app.register(userRoutes, { prefix: '/api' });
 app.register(authRoutes, { prefix: '/api' });
 app.register(teamRoutes, { prefix: '/api' });
