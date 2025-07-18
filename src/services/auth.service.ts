@@ -6,8 +6,8 @@ const prisma = new PrismaClient();
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret';
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret';
-const JWT_EXPIRES_IN = 900; // 15 minutes in seconds
-const JWT_REFRESH_EXPIRES_IN = 604800; // 7 days in seconds
+const JWT_EXPIRES_IN = 900;
+const JWT_REFRESH_EXPIRES_IN = 604800;
 
 export const register = async (data: {
   username: string;

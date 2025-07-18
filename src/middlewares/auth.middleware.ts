@@ -15,7 +15,7 @@ export const authenticateToken = async (
 ): Promise<void> => {
   try {
     const authHeader = request.headers.authorization;
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
       reply.code(401).send({ message: 'Access token required' });

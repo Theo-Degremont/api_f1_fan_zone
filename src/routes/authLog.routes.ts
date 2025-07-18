@@ -1,5 +1,4 @@
 import { FastifyInstance } from 'fastify';
-import { validateApiKey } from '../middlewares/apiKey.middleware';
 import {
   getLogsByDate,
   getLogsByUser,
@@ -10,8 +9,6 @@ import {
 } from '../controllers/authLog.controller';
 
 export default async function authLogRoutes(fastify: FastifyInstance) {
-  fastify.addHook('preHandler', validateApiKey);
-  
   fastify.get('/auth-logs/date/:date', getLogsByDate);
   fastify.get('/auth-logs/stats/:date', getDayStats);
   fastify.get('/auth-logs/user/:userId', getLogsByUser);

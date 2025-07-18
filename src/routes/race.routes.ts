@@ -1,11 +1,8 @@
 import { FastifyInstance } from 'fastify';
-import { validateApiKey } from '../middlewares/apiKey.middleware';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import * as RaceController from '../controllers/race.controller';
 
 export default async function raceRoutes(fastify: FastifyInstance) {
-  fastify.addHook('preHandler', validateApiKey);
-  
   // Routes CRUD basiques
   fastify.post('/races', RaceController.createRace);
   fastify.put('/races/:id', RaceController.updateRace);

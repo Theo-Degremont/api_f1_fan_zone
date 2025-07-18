@@ -1,5 +1,4 @@
 import { FastifyInstance } from 'fastify';
-import { validateApiKey } from '../middlewares/apiKey.middleware';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import {
   answerDailyQuestion,
@@ -11,8 +10,6 @@ import {
 } from '../controllers/answerUser.controller';
 
 export default async function answerUserRoutes(fastify: FastifyInstance) {
-  fastify.addHook('preHandler', validateApiKey);
-  
   fastify.register(async function (fastify) {
     fastify.addHook('preHandler', authenticateToken);
     

@@ -1,4 +1,3 @@
-// src/routes/team.routes.ts
 import { FastifyInstance } from 'fastify';
 import * as teamController from '../controllers/team.controller';
 import { authenticateToken } from '../middlewares/auth.middleware';

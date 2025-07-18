@@ -23,8 +23,7 @@ export const validateApiKey = async (
       });
       return;
     }
-
-    // Si la clé API est valide, on continue
+    
   } catch (err) {
     reply.code(500).send({ 
       error: 'Internal server error',

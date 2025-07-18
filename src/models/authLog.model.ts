@@ -67,10 +67,9 @@ const AuthLogSchema = new Schema<IAuthLog>({
     previous_login: Date
   }
 }, {
-  timestamps: true // Ajoute createdAt et updatedAt automatiquement
+  timestamps: true 
 });
 
-// Index pour améliorer les performances des requêtes
 AuthLogSchema.index({ timestamp: -1 });
 AuthLogSchema.index({ email: 1 });
 AuthLogSchema.index({ action: 1 });

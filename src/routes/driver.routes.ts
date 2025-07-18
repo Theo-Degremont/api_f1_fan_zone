@@ -1,5 +1,4 @@
 import { FastifyInstance } from 'fastify';
-import { validateApiKey } from '../middlewares/apiKey.middleware';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import {
   createDriver,
@@ -14,9 +13,6 @@ import {
 } from '../controllers/driver.controller';
 
 export default async function driverRoutes(fastify: FastifyInstance) {
-  // Apply API key validation to all routes
-  fastify.addHook('preHandler', validateApiKey);
-  
   // Routes CRUD basiques
   fastify.post('/drivers', createDriver);
   fastify.get('/drivers', getAllDrivers);
