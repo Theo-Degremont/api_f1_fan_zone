@@ -17,6 +17,7 @@ import teamRoutes from './routes/team.routes';
 import driverRoutes from './routes/driver.routes';
 import raceRoutes from './routes/race.routes';
 import raceResultRoutes from './routes/raceResult.routes';
+import classementDriverRoutes from './routes/classementDriver.routes';
 
 const prisma = new PrismaClient();
 const app = Fastify({ logger: true });
@@ -46,6 +47,7 @@ app.register(teamRoutes, { prefix: '/api' });
 app.register(driverRoutes, { prefix: '/api' });
 app.register(raceRoutes, { prefix: '/api' });
 app.register(raceResultRoutes, { prefix: '/api' });
+app.register(classementDriverRoutes, { prefix: '/api' });
 
 
 // Connect to MongoDB

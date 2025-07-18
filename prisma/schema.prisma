@@ -32,6 +32,7 @@ model Driver {
   previous_teams  Int[]
   current_team    Team?        @relation("CurrentTeamDrivers", fields: [current_team_id], references: [id])
   race_results    RaceResult[]
+  classements     ClassementDriver[]
 }
 
 model Team {
@@ -44,6 +45,7 @@ model Team {
   nb_championship Int
   nb_race         Int
   current_drivers Driver[]  @relation("CurrentTeamDrivers")
+  classements     ClassementTeam[]
 }
 
 model Race {
@@ -82,4 +84,30 @@ model GameScore {
   score_ms   Int
   created_at DateTime @default(now())
   user       User     @relation(fields: [user_id], references: [id])
+}
+
+model ClassementDriver {
+  id        Int    @id @default(autoincrement())
+  season    Int
+  id_driver Int
+  position  Int
+  points    Int
+  driver    Driver @relation(fields: [id_driver], references: [id])
+  
+  @@unique([season, id_driver])
+  @@unique([season, position])
+  @@map("classement_driver")
+}
+
+model ClassementTeam {
+  id        Int    @id @default(autoincrement())
+  season    Int
+  id_team Int
+  position  Int
+  points    Int
+  team    Team @relation(fields: [id_team], references: [id])
+  
+  @@unique([season, id_team])
+  @@unique([season, position])  
+  @@map("classement_team")
 }
