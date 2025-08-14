@@ -14,15 +14,50 @@ export const createTeam = async (data: Prisma.TeamCreateInput) => {
     throw new Error('Color must be in hexadecimal format (#RRGGBB)');
   }
   
-  return prisma.team.create({ data });
+  return prisma.team.create({ 
+    data,
+    include: {
+      current_drivers: {
+        select: {
+          id: true,
+          name: true,
+          surname: true,
+          number: true
+        }
+      }
+    }
+  });
 };
 
 export const getAllTeams = async () => {
-  return prisma.team.findMany();
+  return prisma.team.findMany({
+    include: {
+      current_drivers: {
+        select: {
+          id: true,
+          name: true,
+          surname: true,
+          number: true
+        }
+      }
+    }
+  });
 };
 
 export const getTeamById = async (id: number) => {
-  return prisma.team.findUnique({ where: { id } });
+  return prisma.team.findUnique({ 
+    where: { id },
+    include: {
+      current_drivers: {
+        select: {
+          id: true,
+          name: true,
+          surname: true,
+          number: true
+        }
+      }
+    }
+  });
 };
 
 export const updateTeam = async (id: number, data: Prisma.TeamUpdateInput) => {
@@ -34,6 +69,16 @@ export const updateTeam = async (id: number, data: Prisma.TeamUpdateInput) => {
   return prisma.team.update({
     where: { id },
     data,
+    include: {
+      current_drivers: {
+        select: {
+          id: true,
+          name: true,
+          surname: true,
+          number: true
+        }
+      }
+    }
   });
 };
 
@@ -41,52 +86,44 @@ export const deleteTeam = async (id: number) => {
   return prisma.team.delete({ where: { id } });
 };
 
-// Fonctions pour récupérer les pilotes d'une équipe
 export const getTeamCurrentDrivers = async (teamId: number) => {
-  return prisma.$queryRaw`
-    SELECT 
-      d.*,
-      t.name as team_name,
-      t.color as team_color
-    FROM "Driver" d
-    JOIN "Team" t ON d.current_team_id = t.id
-    WHERE t.id = ${teamId}
-    ORDER BY d.name ASC
-  `;
-};
-
-export const getTeamAllDrivers = async (teamId: number) => {
-  return prisma.$queryRaw`
-    SELECT DISTINCT
-      d.*,
-      CASE 
-        WHEN d.current_team_id = ${teamId} THEN 'current'
-        ELSE 'previous'
-      END as driver_status
-    FROM "Driver" d
-    WHERE d.current_team_id = ${teamId}
-       OR ${teamId} = ANY(d.previous_teams)
-    ORDER BY 
-      CASE WHEN d.current_team_id = ${teamId} THEN 0 ELSE 1 END,
-      d.name ASC
-  `;
+  return prisma.driver.findMany({
+    where: { current_team_id: teamId },
+    select: {
+      id: true,
+      name: true,
+      surname: true,
+      number: true,
+      nb_championship: true,
+      nb_victory: true,
+      nb_pole: true,
+      nb_race: true
+    }
+  });
 };
 
 export const getTeamWithDrivers = async (teamId: number) => {
   const team = await prisma.team.findUnique({
     where: { id: teamId },
+    include: {
+      current_drivers: {
+        select: {
+          id: true,
+          name: true,
+          surname: true,
+          number: true,
+          nb_championship: true,
+          nb_victory: true,
+          nb_pole: true,
+          nb_race: true
+        }
+      }
+    }
   });
   
   if (!team) {
     throw new Error('Team not found');
   }
 
-  const currentDrivers = await getTeamCurrentDrivers(teamId);
-  const allDrivers = await getTeamAllDrivers(teamId);
-
-  return {
-    team,
-    current_drivers: currentDrivers,
-    all_drivers: allDrivers,
-  };
+  return team;
 };

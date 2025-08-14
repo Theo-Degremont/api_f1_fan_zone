@@ -20,32 +20,56 @@ model User {
 }
 
 model Driver {
-  id              Int          @id @default(autoincrement())
-  name            String       @db.VarChar(255)
+  id              Int                 @id @default(autoincrement())
+  name            String              @db.VarChar(255)
   nb_championship Int
   nb_pole         Int
   nb_race         Int
   nb_victory      Int
-  number          Int
-  surname         String       @db.VarChar(255)
+  number          Int                 @unique
+  surname         String              @db.VarChar(255)
   current_team_id Int?
-  previous_teams  Int[]
-  current_team    Team?        @relation("CurrentTeamDrivers", fields: [current_team_id], references: [id])
+  image_url       String?             @db.VarChar(500)
+  key             String              @unique @db.VarChar(255)
+  nb_podiums      Int                 @default(0)
+  current_team    Team?               @relation("CurrentTeamDrivers", fields: [current_team_id], references: [id])
   race_results    RaceResult[]
   classements     ClassementDriver[]
+  team_history    DriverTeamHistory[]
 }
 
 model Team {
-  id              Int       @id @default(autoincrement())
-  name            String    @db.VarChar(255)
+  id              Int                 @id @default(autoincrement())
+  name            String              @db.VarChar(255)
   date_start      DateTime
   date_end        DateTime?
   nb_victory      Int
-  color           String    @db.VarChar(7)
+  color           String              @db.VarChar(7)
   nb_championship Int
   nb_race         Int
-  current_drivers Driver[]  @relation("CurrentTeamDrivers")
+  key             String              @unique @db.VarChar(255)
+  nb_podiums      Int                 @default(0)
+  nb_pole         Int                 @default(0)
+  current_drivers Driver[]            @relation("CurrentTeamDrivers")
   classements     ClassementTeam[]
+  driver_history  DriverTeamHistory[]
+}
+
+model DriverTeamHistory {
+  id           Int       @id @default(autoincrement())
+  driver_id    Int
+  team_id      Int
+  date_start   DateTime
+  date_end     DateTime?
+  season_start Int
+  season_end   Int?
+  is_current   Boolean   @default(false)
+  created_at   DateTime  @default(now())
+  driver       Driver    @relation(fields: [driver_id], references: [id])
+  team         Team      @relation(fields: [team_id], references: [id])
+
+  @@unique([driver_id, team_id, season_start])
+  @@map("driver_team_history")
 }
 
 model Race {
@@ -58,24 +82,26 @@ model Race {
   nb_laps      Int
   nb_curve     Int?
   duration     Int?
+  image_url    String?      @db.VarChar(500)
+  season       Int
   race_results RaceResult[]
 }
 
 model RaceResult {
-  id           Int       @id @default(autoincrement())
-  race_id      Int
-  driver_id    Int
-  position     Int       // 0 = hors course, 1 = 1er, 2 = 2ème, etc.
-  points       Int
-  fastest_lap  DateTime?
-  lap_time     Int?      // Temps du tour le plus rapide en millisecondes
-  total_time   Int?      // Temps total de course en millisecondes
-  status       String    @default("FINISHED") @db.VarChar(50) // FINISHED, DNF, DSQ, DNS
-  created_at   DateTime  @default(now())
-  driver       Driver    @relation(fields: [driver_id], references: [id])
-  race         Race      @relation(fields: [race_id], references: [id])
-  
-  @@unique([race_id, driver_id]) // Un pilote ne peut avoir qu'un seul résultat par course
+  id          Int       @id @default(autoincrement())
+  race_id     Int
+  driver_id   Int
+  position    Int
+  points      Int
+  fastest_lap DateTime?
+  created_at  DateTime  @default(now())
+  lap_time    Int?
+  status      String    @default("FINISHED") @db.VarChar(50)
+  total_time  Int?
+  driver      Driver    @relation(fields: [driver_id], references: [id])
+  race        Race      @relation(fields: [race_id], references: [id])
+
+  @@unique([race_id, driver_id])
 }
 
 model GameScore {
@@ -92,22 +118,26 @@ model ClassementDriver {
   id_driver Int
   position  Int
   points    Int
+  nb_wins   Int    @default(0)
+  nb_points Int    @default(0)
   driver    Driver @relation(fields: [id_driver], references: [id])
-  
+
   @@unique([season, id_driver])
   @@unique([season, position])
   @@map("classement_driver")
 }
 
 model ClassementTeam {
-  id        Int    @id @default(autoincrement())
+  id        Int  @id @default(autoincrement())
   season    Int
-  id_team Int
+  id_team   Int
   position  Int
   points    Int
-  team    Team @relation(fields: [id_team], references: [id])
-  
+  nb_wins   Int  @default(0)
+  nb_points Int  @default(0)
+  team      Team @relation(fields: [id_team], references: [id])
+
   @@unique([season, id_team])
-  @@unique([season, position])  
+  @@unique([season, position])
   @@map("classement_team")
 }

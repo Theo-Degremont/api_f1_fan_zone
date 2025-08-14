@@ -29,3 +29,10 @@ export const updateUser = (id: number, data: Partial<Omit<Parameters<typeof crea
 
 export const deleteUser = (id: number) =>
   prisma.user.delete({ where: { id } });
+
+export const checkEmailAvailability = async (email: string) => {
+  const existingUser = await prisma.user.findFirst({
+    where: { email }
+  });
+  return { available: !existingUser };
+};

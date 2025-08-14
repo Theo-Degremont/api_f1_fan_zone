@@ -5,6 +5,9 @@ import { authenticateToken } from '../middlewares/auth.middleware';
 export default async function userRoutes(fastify: FastifyInstance) {
   fastify.get('/users', userController.getUsers);
   fastify.post('/users', userController.createUser);
+  
+  // Route pour vérifier la disponibilité d'un email
+  fastify.get('/users/check-email', userController.checkEmailAvailability);
 
   fastify.get('/me', { preHandler: authenticateToken }, userController.getMyProfile);
   fastify.put('/me', { preHandler: authenticateToken }, userController.updateMyProfile as any);

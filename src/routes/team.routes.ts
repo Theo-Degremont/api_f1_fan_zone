@@ -9,6 +9,5 @@ export default async function teamRoutes(fastify: FastifyInstance) {
   fastify.put('/teams/:id', teamController.updateTeam as any);
   fastify.delete('/teams/:id', teamController.deleteTeam as any);
   
-  // Route sécurisée - nécessite un access token
-  fastify.get('/teams/:id', { preHandler: authenticateToken }, teamController.getTeamById as any);
-}
+  // Routes sécurisées - nécessitent un access token
+  fastify.get('/teams/:id', { preHandler: authenticateToken }, teamController.getTeamById as any);}

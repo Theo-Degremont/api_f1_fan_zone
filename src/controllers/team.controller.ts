@@ -5,8 +5,15 @@ export const createTeam = async (request: FastifyRequest, reply: FastifyReply) =
   try {
     const team = await teamService.createTeam(request.body as any);
     reply.code(201).send(team);
-  } catch (err) {
-    reply.code(400).send({ error: (err as Error).message });
+  } catch (err: any) {
+    // Handle unique constraint violation
+    if (err.code === 'P2002') {
+      return reply.code(409).send({ 
+        error: 'Team key already exists',
+        field: err.meta?.target?.[0] || 'key'
+      });
+    }
+    reply.code(400).send({ error: err.message });
   }
 };
 
@@ -27,8 +34,14 @@ export const updateTeam = async (request: FastifyRequest<{ Params: { id: string 
     const id = parseInt(request.params.id);
     const updated = await teamService.updateTeam(id, request.body as any);
     reply.send(updated);
-  } catch (err) {
-    reply.code(400).send({ error: (err as Error).message });
+  } catch (err: any) {
+    if (err.code === 'P2002') {
+      return reply.code(409).send({ 
+        error: 'Team key already exists',
+        field: err.meta?.target?.[0] || 'key'
+      });
+    }
+    reply.code(400).send({ error: err.message });
   }
 };
 
@@ -37,7 +50,7 @@ export const deleteTeam = async (request: FastifyRequest<{ Params: { id: string 
     const id = parseInt(request.params.id);
     await teamService.deleteTeam(id);
     reply.code(204).send();
-  } catch (err) {
-    reply.code(400).send({ error: (err as Error).message });
+  } catch (err: any) {
+    reply.code(400).send({ error: err.message });
   }
 };

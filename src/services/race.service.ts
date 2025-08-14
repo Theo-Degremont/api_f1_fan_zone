@@ -11,6 +11,7 @@ export const createRace = async (data: {
   nb_laps: number;
   nb_curve?: number;
   duration?: number;
+  image_url?: string;
 }) => {
   return await prisma.race.create({ data });
 };
@@ -44,4 +45,37 @@ export const updateRace = async (id: number, data: Partial<{
 
 export const deleteRace = async (id: number) => {
   return await prisma.race.delete({ where: { id } });
+};
+
+export const getNextRace = async () => {
+  const now = new Date();
+  return await prisma.race.findFirst({
+    where: {
+      started_at: {
+        gte: now
+      }
+    },
+    orderBy: {
+      started_at: 'asc'
+    },
+    include: { race_results: true }
+  });
+};
+
+export const getRacesByYear = async (year: number) => {
+  const startOfYear = new Date(year, 0, 1); // 1er janvier de l'année
+  const endOfYear = new Date(year + 1, 0, 1); // 1er janvier de l'année suivante
+
+  return await prisma.race.findMany({
+    where: {
+      started_at: {
+        gte: startOfYear,
+        lt: endOfYear
+      }
+    },
+    orderBy: {
+      started_at: 'asc'
+    },
+    include: { race_results: true }
+  });
 };

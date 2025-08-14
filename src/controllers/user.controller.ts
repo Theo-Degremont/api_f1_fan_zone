@@ -59,3 +59,21 @@ export const deleteMyProfile = async (req: FastifyRequest, reply: FastifyReply) 
     reply.code(500).send({ message: 'Error deleting user profile' });
   }
 };
+
+export const checkEmailAvailability = async (
+  req: FastifyRequest<{ Querystring: { email: string } }>,
+  reply: FastifyReply
+) => {
+  try {
+    const { email } = req.query;
+    
+    if (!email) {
+      return reply.code(400).send({ message: 'Email parameter is required' });
+    }
+
+    const result = await userService.checkEmailAvailability(email);
+    reply.send(result);
+  } catch (err) {
+    reply.code(500).send({ message: 'Error checking email availability' });
+  }
+};

@@ -1,0 +1,447 @@
+{
+  "info": {
+    "name": "F1 Fan Zone API",
+    "description": "Collection complète pour tester l'API F1 Fan Zone",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "your-api-key-here",
+      "type": "string"
+    },
+    {
+      "key": "jwtToken",
+      "value": "your-jwt-token-here",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Teams",
+      "item": [
+        {
+          "name": "Get All Teams",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/teams",
+              "host": ["{{baseUrl}}"],
+              "path": ["teams"]
+            }
+          }
+        },
+        {
+          "name": "Create Team",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key\": \"mercedes\",\n  \"name\": \"Mercedes-AMG Petronas F1 Team\",\n  \"date_start\": \"2010-01-01T00:00:00Z\",\n  \"date_end\": null,\n  \"nb_victory\": 125,\n  \"nb_podiums\": 290,\n  \"nb_pole\": 135,\n  \"color\": \"#00D2BE\",\n  \"nb_championship\": 8,\n  \"nb_race\": 280\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/teams",
+              "host": ["{{baseUrl}}"],
+              "path": ["teams"]
+            }
+          }
+        },
+        {
+          "name": "Get Team by ID (JWT Required)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/teams/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["teams", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Team by Key (JWT Required)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/teams/key/mercedes",
+              "host": ["{{baseUrl}}"],
+              "path": ["teams", "key", "mercedes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Drivers",
+      "item": [
+        {
+          "name": "Get All Drivers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/drivers",
+              "host": ["{{baseUrl}}"],
+              "path": ["drivers"]
+            }
+          }
+        },
+        {
+          "name": "Create Driver",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key\": \"hamilton-lewis\",\n  \"name\": \"Lewis\",\n  \"surname\": \"Hamilton\",\n  \"number\": 44,\n  \"nb_championship\": 7,\n  \"nb_pole\": 104,\n  \"nb_podiums\": 198,\n  \"nb_race\": 350,\n  \"nb_victory\": 103,\n  \"current_team_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/drivers",
+              "host": ["{{baseUrl}}"],
+              "path": ["drivers"]
+            }
+          }
+        },
+        {
+          "name": "Get Driver by Key (JWT Required)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/drivers/key/hamilton-lewis",
+              "host": ["{{baseUrl}}"],
+              "path": ["drivers", "key", "hamilton-lewis"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Races",
+      "item": [
+        {
+          "name": "Get All Races",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/races",
+              "host": ["{{baseUrl}}"],
+              "path": ["races"]
+            }
+          }
+        },
+        {
+          "name": "Create Race",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"race_name\": \"Monaco Grand Prix\",\n  \"track_name\": \"Circuit de Monaco\",\n  \"country\": \"Monaco\",\n  \"city\": \"Monte Carlo\",\n  \"started_at\": \"2024-05-26T15:00:00Z\",\n  \"nb_laps\": 78,\n  \"nb_curve\": 19,\n  \"duration\": 6180000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/races",
+              "host": ["{{baseUrl}}"],
+              "path": ["races"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Race Results",
+      "item": [
+        {
+          "name": "Create Race Result",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"race_id\": 1,\n  \"driver_id\": 1,\n  \"position\": 1,\n  \"points\": 25,\n  \"fastest_lap\": \"2024-05-26T15:45:32Z\",\n  \"lap_time\": 74528,\n  \"total_time\": 5825000,\n  \"status\": \"FINISHED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/race-results",
+              "host": ["{{baseUrl}}"],
+              "path": ["race-results"]
+            }
+          }
+        },
+        {
+          "name": "Get All Race Results",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/race-results",
+              "host": ["{{baseUrl}}"],
+              "path": ["race-results"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Classements (JWT Required)",
+      "item": [
+        {
+          "name": "Create Driver Classement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"season\": 2024,\n  \"id_driver\": 1,\n  \"position\": 1,\n  \"points\": 575\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/classement-drivers",
+              "host": ["{{baseUrl}}"],
+              "path": ["classement-drivers"]
+            }
+          }
+        },
+        {
+          "name": "Get Driver Classements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/classement-drivers",
+              "host": ["{{baseUrl}}"],
+              "path": ["classement-drivers"]
+            }
+          }
+        },
+        {
+          "name": "Create Team Classement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"season\": 2024,\n  \"id_team\": 1,\n  \"position\": 1,\n  \"points\": 765\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/classement-teams",
+              "host": ["{{baseUrl}}"],
+              "path": ["classement-teams"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"favorite_team_id\": 1,\n  \"favorite_driver_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

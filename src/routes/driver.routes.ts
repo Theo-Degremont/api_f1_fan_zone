@@ -8,8 +8,7 @@ import {
   deleteDriver,
   assignDriverToTeam,
   removeDriverFromTeam,
-  getDriverWithTeams,
-  getDriverTeamHistory,
+  getDriversByTeam,
 } from '../controllers/driver.controller';
 
 export default async function driverRoutes(fastify: FastifyInstance) {
@@ -28,6 +27,5 @@ export default async function driverRoutes(fastify: FastifyInstance) {
   // Routes spécifiques pour la gestion des équipes
   fastify.post('/drivers/:id/assign-team', assignDriverToTeam);
   fastify.post('/drivers/:id/remove-team', removeDriverFromTeam);
-  fastify.get('/drivers/:id/with-teams', getDriverWithTeams);
-  fastify.get('/drivers/:id/team-history', getDriverTeamHistory);
+  fastify.get('/drivers/team/:teamId', getDriversByTeam);
 }
