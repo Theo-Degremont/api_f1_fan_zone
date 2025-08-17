@@ -1,6 +1,8 @@
 import Fastify from 'fastify';
 import fastifyCors from '@fastify/cors';
 import fastifyJwt from '@fastify/jwt';
+import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
 import mongoose from 'mongoose';
 import env from './config/env';
 import { PrismaClient } from '@prisma/client';
@@ -23,6 +25,58 @@ import gameScoreRoutes from './routes/gameScore.routes';
 
 const prisma = new PrismaClient();
 const app = Fastify({ logger: true });
+
+// Configuration Swagger
+app.register(swagger, {
+  openapi: {
+    info: {
+      title: 'F1 Fan Zone API',
+      description: 'API complète pour l\'application F1 Fan Zone - Gestion des pilotes, équipes, courses et classements',
+      version: '1.0.0',
+      contact: {
+        name: 'F1 Fan Zone Team',
+        email: 'contact@f1fanzone.com'
+      }
+    },
+    servers: [
+      { url: 'http://localhost:3002', description: 'Serveur de développement' },
+      { url: 'https://api.f1fanzone.com', description: 'Serveur de production' }
+    ],
+    components: {
+      securitySchemes: {
+        apiKey: {
+          type: 'apiKey',
+          name: 'X-API-Key',
+          in: 'header',
+          description: 'Clé API requise pour tous les endpoints'
+        },
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Token JWT pour les endpoints sécurisés'
+        }
+      }
+    },
+    security: [
+      { apiKey: [] }
+    ]
+  }
+});
+
+app.register(swaggerUi, {
+  routePrefix: '/api/docs',
+  uiConfig: {
+    docExpansion: 'list',
+    deepLinking: false
+  },
+  staticCSP: true,
+  transformStaticCSP: (header) => header,
+  uiHooks: {
+    onRequest: function (request, reply, next) { next() },
+    preHandler: function (request, reply, next) { next() }
+  }
+});
 
 app.register(fastifyCors);
 app.register(fastifyJwt, {

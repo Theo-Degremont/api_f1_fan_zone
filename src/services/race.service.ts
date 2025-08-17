@@ -12,6 +12,7 @@ export const createRace = async (data: {
   nb_curve?: number;
   duration?: number;
   image_url?: string;
+  season: number;
 }) => {
   return await prisma.race.create({ data });
 };
@@ -36,6 +37,7 @@ export const updateRace = async (id: number, data: Partial<{
   nb_laps: number;
   nb_curve?: number;
   duration?: number;
+  season: number;
 }>) => {
   return await prisma.race.update({
     where: { id },

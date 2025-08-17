@@ -27,5 +27,6 @@ export default async function classementTeamRoutes(fastify: FastifyInstance) {
     fastify.get('/classements-teams/seasons/available', getAvailableSeasons);
     fastify.get('/classements-teams/season/:season/stats', getSeasonStats);
     fastify.get('/classements-teams/team/:teamId/season/:season', getTeamPosition);
+  
   });
 }
