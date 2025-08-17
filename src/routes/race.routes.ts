@@ -15,7 +15,6 @@ export default async function raceRoutes(fastify: FastifyInstance) {
   // Routes sécurisées avec JWT - nécessitent un access token
   fastify.register(async function (fastify) {
     fastify.addHook('preHandler', authenticateToken);
-    fastify.get('/races', RaceController.getAllRaces);
     fastify.get('/races/:id', RaceController.getRaceById);
     fastify.get('/races/year/:year', RaceController.getRacesByYear);
   });

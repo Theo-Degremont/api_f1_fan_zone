@@ -7,11 +7,6 @@ export const createRace = async (req: FastifyRequest, res: FastifyReply) => {
   res.code(201).send(race);
 };
 
-export const getAllRaces = async (_req: FastifyRequest, res: FastifyReply) => {
-  const races = await RaceService.getAllRaces();
-  res.send(races);
-};
-
 export const getRaceById = async (req: FastifyRequest, res: FastifyReply) => {
   const { id } = req.params as { id: string };
   const race = await RaceService.getRaceById(Number(id));

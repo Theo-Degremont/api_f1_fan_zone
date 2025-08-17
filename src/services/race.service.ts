@@ -17,10 +17,6 @@ export const createRace = async (data: {
   return await prisma.race.create({ data });
 };
 
-export const getAllRaces = async () => {
-  return await prisma.race.findMany({ include: { race_results: true } });
-};
-
 export const getRaceById = async (id: number) => {
   return await prisma.race.findUnique({
     where: { id },

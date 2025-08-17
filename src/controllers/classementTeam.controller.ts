@@ -21,39 +21,6 @@ export const createClassement = async (req: FastifyRequest, res: FastifyReply) =
   }
 };
 
-export const getAllClassements = async (_req: FastifyRequest, res: FastifyReply) => {
-  try {
-    const classements = await ClassementTeamService.getAllClassements();
-    res.send(classements);
-  } catch (error: any) {
-    res.code(500).send({ 
-      error: 'Erreur lors de la récupération des classements équipes',
-      message: error.message 
-    });
-  }
-};
-
-export const getClassementById = async (req: FastifyRequest, res: FastifyReply) => {
-  try {
-    const { id } = req.params as { id: string };
-    const classement = await ClassementTeamService.getClassementById(Number(id));
-    
-    if (!classement) {
-      return res.code(404).send({ 
-        error: 'Classement équipe introuvable',
-        message: `Aucun classement équipe trouvé avec l'ID ${id}` 
-      });
-    }
-    
-    res.send(classement);
-  } catch (error: any) {
-    res.code(500).send({ 
-      error: 'Erreur lors de la récupération du classement équipe',
-      message: error.message 
-    });
-  }
-};
-
 export const getClassementBySeason = async (req: FastifyRequest, res: FastifyReply) => {
   try {
     const { season } = req.params as { season: string };
@@ -83,21 +50,6 @@ export const getClassementBySeason = async (req: FastifyRequest, res: FastifyRep
   } catch (error: any) {
     res.code(500).send({ 
       error: 'Erreur lors de la récupération du classement équipe de la saison',
-      message: error.message 
-    });
-  }
-};
-
-export const getAvailableSeasons = async (_req: FastifyRequest, res: FastifyReply) => {
-  try {
-    const seasons = await ClassementTeamService.getAvailableSeasons();
-    res.send({
-      availableSeasons: seasons,
-      total: seasons.length
-    });
-  } catch (error: any) {
-    res.code(500).send({ 
-      error: 'Erreur lors de la récupération des saisons équipes',
       message: error.message 
     });
   }

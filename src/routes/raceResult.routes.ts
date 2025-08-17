@@ -2,8 +2,6 @@ import { FastifyInstance } from 'fastify';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import {
   createRaceResult,
-  getAllRaceResults,
-  getRaceResultById,
   getRaceResultsByRaceId,
   getRaceResultsByDriverId,
   getFinalRaceRanking,
@@ -22,10 +20,6 @@ export default async function raceResultRoutes(fastify: FastifyInstance) {
   // Routes sécurisées avec JWT - nécessitent un access token
   fastify.register(async function (fastify) {
     fastify.addHook('preHandler', authenticateToken);
-    
-    // Routes de lecture
-    fastify.get('/race-results', getAllRaceResults);
-    fastify.get('/race-results/:id', getRaceResultById);
     
     // Routes spécialisées
     fastify.get('/races/:raceId/results', getRaceResultsByRaceId);

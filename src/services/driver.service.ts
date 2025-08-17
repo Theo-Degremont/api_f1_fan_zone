@@ -99,18 +99,3 @@ export const removeDriverFromTeam = async (driverId: number) => {
     }
   });
 };
-
-export const getDriversByTeam = async (teamId: number) => {
-  return prisma.driver.findMany({
-    where: { current_team_id: teamId },
-    include: {
-      current_team: {
-        select: {
-          id: true,
-          name: true,
-          color: true
-        }
-      }
-    }
-  });
-};

@@ -2,10 +2,7 @@ import { FastifyInstance } from 'fastify';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import {
   createClassement,
-  getAllClassements,
-  getClassementById,
   getClassementBySeason,
-  getAvailableSeasons,
   getSeasonStats,
   getTeamPosition,
   updateClassement,
@@ -21,10 +18,7 @@ export default async function classementTeamRoutes(fastify: FastifyInstance) {
   // Routes GET sécurisées avec JWT - nécessitent un access token
   fastify.register(async function (fastify) {
     fastify.addHook('preHandler', authenticateToken);
-    fastify.get('/classements-teams', getAllClassements);
-    fastify.get('/classements-teams/:id', getClassementById);
     fastify.get('/classements-teams/season/:season', getClassementBySeason);
-    fastify.get('/classements-teams/seasons/available', getAvailableSeasons);
     fastify.get('/classements-teams/season/:season/stats', getSeasonStats);
     fastify.get('/classements-teams/team/:teamId/season/:season', getTeamPosition);
   

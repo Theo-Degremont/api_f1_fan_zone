@@ -18,43 +18,6 @@ export const createClassement = async (data: Prisma.ClassementTeamCreateInput) =
   });
 };
 
-export const getAllClassements = async () => {
-  return prisma.classementTeam.findMany({
-    include: {
-      team: {
-        select: {
-          id: true,
-          name: true,
-          color: true,
-          nb_championship: true,
-          nb_victory: true
-        }
-      }
-    },
-    orderBy: [
-      { season: 'desc' },
-      { position: 'asc' }
-    ]
-  });
-};
-
-export const getClassementById = async (id: number) => {
-  return prisma.classementTeam.findUnique({ 
-    where: { id },
-    include: {
-      team: {
-        select: {
-          id: true,
-          name: true,
-          color: true,
-          nb_championship: true,
-          nb_victory: true
-        }
-      }
-    }
-  });
-};
-
 export const getClassementBySeason = async (season: number) => {
   return prisma.classementTeam.findMany({
     where: { season },
@@ -71,16 +34,6 @@ export const getClassementBySeason = async (season: number) => {
     },
     orderBy: { position: 'asc' }
   });
-};
-
-export const getAvailableSeasons = async () => {
-  const seasons = await prisma.classementTeam.findMany({
-    select: { season: true },
-    distinct: ['season'],
-    orderBy: { season: 'desc' }
-  });
-  
-  return seasons.map((s: { season: number }) => s.season);
 };
 
 export const updateClassement = async (id: number, data: Prisma.ClassementTeamUpdateInput) => {

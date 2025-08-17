@@ -14,34 +14,6 @@ export const createRaceResult = async (req: FastifyRequest, res: FastifyReply) =
   }
 };
 
-export const getAllRaceResults = async (_req: FastifyRequest, res: FastifyReply) => {
-  try {
-    const raceResults = await RaceResultService.getAllRaceResults();
-    res.send(raceResults);
-  } catch (error) {
-    res.code(500).send({ 
-      error: 'Erreur lors de la récupération des résultats', 
-      message: error instanceof Error ? error.message : 'Erreur inconnue' 
-    });
-  }
-};
-
-export const getRaceResultById = async (req: FastifyRequest, res: FastifyReply) => {
-  try {
-    const { id } = req.params as { id: string };
-    const raceResult = await RaceResultService.getRaceResultById(Number(id));
-    if (!raceResult) {
-      return res.code(404).send({ message: 'Résultat de course non trouvé' });
-    }
-    res.send(raceResult);
-  } catch (error) {
-    res.code(500).send({ 
-      error: 'Erreur lors de la récupération du résultat', 
-      message: error instanceof Error ? error.message : 'Erreur inconnue' 
-    });
-  }
-};
-
 export const getRaceResultsByRaceId = async (req: FastifyRequest, res: FastifyReply) => {
   try {
     const { raceId } = req.params as { raceId: string };

@@ -90,13 +90,3 @@ export const removeDriverFromTeam = async (req: FastifyRequest<{ Params: { id: s
     reply.code(400).send({ error: (error as Error).message });
   }
 };
-
-export const getDriversByTeam = async (req: FastifyRequest<{ Params: { teamId: string } }>, reply: FastifyReply) => {
-  try {
-    const teamId = parseInt(req.params.teamId);
-    const drivers = await driverService.getDriversByTeam(teamId);
-    reply.send(drivers);
-  } catch (error) {
-    reply.code(500).send({ error: (error as Error).message });
-  }
-};

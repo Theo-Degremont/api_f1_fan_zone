@@ -2,10 +2,7 @@ import { FastifyInstance } from 'fastify';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import {
   createClassement,
-  getAllClassements,
-  getClassementById,
   getClassementBySeason,
-  getAvailableSeasons,
   getSeasonStats,
   updateClassement,
   deleteClassement,
@@ -20,10 +17,7 @@ export default async function classementDriverRoutes(fastify: FastifyInstance) {
   // Routes GET sécurisées avec JWT - nécessitent un access token
   fastify.register(async function (fastify) {
     fastify.addHook('preHandler', authenticateToken);
-    fastify.get('/classements-drivers', getAllClassements);
-    fastify.get('/classements-drivers/:id', getClassementById);
     fastify.get('/classements-drivers/season/:season', getClassementBySeason);
-    fastify.get('/classements-drivers/seasons/available', getAvailableSeasons);
     fastify.get('/classements-drivers/season/:season/stats', getSeasonStats);
   });
 }

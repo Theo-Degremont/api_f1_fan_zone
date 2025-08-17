@@ -35,31 +35,6 @@ export const createRaceResult = async (data: CreateRaceResultData) => {
   });
 };
 
-// Obtenir tous les résultats
-export const getAllRaceResults = async () => {
-  return await prisma.raceResult.findMany({
-    include: {
-      driver: true,
-      race: true
-    },
-    orderBy: [
-      { race_id: 'asc' },
-      { position: 'asc' }
-    ]
-  });
-};
-
-// Obtenir un résultat par ID
-export const getRaceResultById = async (id: number) => {
-  return await prisma.raceResult.findUnique({
-    where: { id },
-    include: {
-      driver: true,
-      race: true
-    }
-  });
-};
-
 // Obtenir les résultats d'une course spécifique (classement final)
 export const getRaceResultsByRaceId = async (raceId: number) => {
   return await prisma.raceResult.findMany({
