@@ -3,7 +3,6 @@ import * as GameScoreService from '../services/gameScore.service';
 
 interface CreateGameScoreRequest {
   Body: {
-    user_id: number;
     score_ms: number;
   };
 }
@@ -12,14 +11,15 @@ interface UserIdParams {
   userId: string;
 }
 
-export const createGameScore = async (req: FastifyRequest<CreateGameScoreRequest>, res: FastifyReply) => {
+export const createGameScore = async (req: any, res: FastifyReply) => {
   try {
-    const { user_id, score_ms } = req.body;
+    const { score_ms } = req.body;
+    const userId = req.authenticatedUser.userId; // Récupéré depuis le token JWT
 
-    if (!user_id || !score_ms) {
+    if (!score_ms) {
       return res.code(400).send({
         error: 'Données manquantes',
-        message: 'user_id et score_ms sont requis'
+        message: 'score_ms est requis'
       });
     }
 
@@ -31,13 +31,16 @@ export const createGameScore = async (req: FastifyRequest<CreateGameScoreRequest
     }
 
     const gameScore = await GameScoreService.createGameScore({
-      user: { connect: { id: user_id } },
+      user: { connect: { id: userId } },
       score_ms
     });
 
     res.code(201).send({
       message: 'Score enregistré avec succès',
-      gameScore
+      gameScore: {
+        ...gameScore,
+        scoreInSeconds: gameScore.score_ms / 1000
+      }
     });
   } catch (error: any) {
     if (error.code === 'P2003') {
@@ -161,6 +164,35 @@ export const getUserBestScore = async (req: FastifyRequest, res: FastifyReply) =
   } catch (error: any) {
     res.code(500).send({
       error: 'Erreur lors de la récupération du meilleur score',
+      message: error.message
+    });
+  }
+};
+
+// Nouvelle fonction pour récupérer le meilleur score de l'utilisateur connecté
+export const getMyBestScore = async (req: any, res: FastifyReply) => {
+  try {
+    const userId = req.authenticatedUser.userId; // Récupéré depuis le token JWT
+
+    const bestScore = await GameScoreService.getUserBestScore(userId);
+
+    if (!bestScore) {
+      return res.send({
+        message: 'Aucun score trouvé',
+        bestScore: null
+      });
+    }
+
+    res.send({
+      message: 'Votre meilleur score',
+      bestScore: {
+        ...bestScore,
+        scoreInSeconds: bestScore.score_ms / 1000
+      }
+    });
+  } catch (error: any) {
+    res.code(500).send({
+      error: 'Erreur lors de la récupération du score',
       message: error.message
     });
   }

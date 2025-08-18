@@ -6,6 +6,7 @@ import {
   getGameScoreById,
   getUserGameScores,
   getUserBestScore,
+  getMyBestScore,
   getGlobalLeaderboard,
   getUserStats,
 } from '../controllers/game_score_controller';
@@ -16,6 +17,7 @@ export default async function gameScoreRoutes(fastify: FastifyInstance) {
     fastify.addHook('preHandler', authenticateToken);
     fastify.post('/game-scores', createGameScore);
     fastify.get('/game-scores', getAllGameScores);
+    fastify.get('/game-scores/best', getMyBestScore); // Nouvelle route pour le meilleur score de l'utilisateur connecté
     fastify.get('/game-scores/:id', getGameScoreById);
     fastify.get('/game-scores/user/:userId', getUserGameScores);
     fastify.get('/game-scores/user/:userId/best', getUserBestScore);
