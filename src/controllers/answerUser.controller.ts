@@ -8,12 +8,12 @@ interface AuthenticatedUser {
 
 export const answerDailyQuestion = async (req: FastifyRequest, res: FastifyReply) => {
   try {
-    const user = (req as any).user as AuthenticatedUser;
+    const user = (req as any).authenticatedUser as { userId: number };
     if (!user) {
       return res.code(401).send({ error: 'Utilisateur non authentifié' });
     }
 
-    const { id_question, answer } = req.body as { id_question: number; answer: number };
+    const { id_question, answer } = req.body as { id_question: string; answer: number };
     
     if (!id_question || !answer) {
       return res.code(400).send({ 
@@ -23,7 +23,7 @@ export const answerDailyQuestion = async (req: FastifyRequest, res: FastifyReply
     }
 
     const userAnswer = await AnswerUserService.createAnswer({
-      id_user: user.id,
+      id_user: user.userId.toString(),
       id_question,
       answer
     });
@@ -50,7 +50,7 @@ export const getTotalVotesForQuestion = async (req: FastifyRequest, res: Fastify
       });
     }
 
-    const result = await AnswerUserService.getTotalVotesForQuestion(Number(questionId));
+    const result = await AnswerUserService.getTotalVotesForQuestion(questionId);
     res.send(result);
   } catch (error) {
     res.code(500).send({ 
@@ -70,7 +70,7 @@ export const getVotesByAnswer = async (req: FastifyRequest, res: FastifyReply) =
       });
     }
 
-    const result = await AnswerUserService.getVotesByAnswer(Number(questionId));
+    const result = await AnswerUserService.getVotesByAnswer(questionId);
     res.send(result);
   } catch (error) {
     res.code(500).send({ 
@@ -82,12 +82,12 @@ export const getVotesByAnswer = async (req: FastifyRequest, res: FastifyReply) =
 
 export const getUserDailyVote = async (req: FastifyRequest, res: FastifyReply) => {
   try {
-    const user = (req as any).user as AuthenticatedUser;
+    const user = (req as any).authenticatedUser as { userId: number };
     if (!user) {
       return res.code(401).send({ error: 'Utilisateur non authentifié' });
     }
 
-    const result = await AnswerUserService.getUserDailyVote(user.id);
+    const result = await AnswerUserService.getUserDailyVote(user.userId.toString());
     res.send(result);
   } catch (error) {
     res.code(500).send({ 
@@ -97,16 +97,34 @@ export const getUserDailyVote = async (req: FastifyRequest, res: FastifyReply) =
   }
 };
 
-export const getUserAnswers = async (req: FastifyRequest, res: FastifyReply) => {
+// Route my-answer avec statistiques intégrées
+export const getUserDailyVoteWithStats = async (req: FastifyRequest, res: FastifyReply) => {
   try {
-    const user = (req as any).user as AuthenticatedUser;
+    const user = (req as any).authenticatedUser as { userId: number };
     if (!user) {
       return res.code(401).send({ error: 'Utilisateur non authentifié' });
     }
 
-    const answers = await AnswerUserService.getUserAnswers(user.id);
+    const result = await AnswerUserService.getUserDailyVoteWithStats(user.userId.toString());
+    res.send(result);
+  } catch (error) {
+    res.code(500).send({ 
+      error: 'Erreur lors de la récupération du vote du jour avec statistiques', 
+      message: error instanceof Error ? error.message : 'Erreur inconnue' 
+    });
+  }
+};
+
+export const getUserAnswers = async (req: FastifyRequest, res: FastifyReply) => {
+  try {
+    const user = (req as any).authenticatedUser as { userId: number };
+    if (!user) {
+      return res.code(401).send({ error: 'Utilisateur non authentifié' });
+    }
+
+    const answers = await AnswerUserService.getUserAnswers(user.userId.toString());
     res.send({
-      userId: user.id,
+      userId: user.userId,
       totalAnswers: answers.length,
       answers
     });
@@ -128,11 +146,33 @@ export const getQuestionStats = async (req: FastifyRequest, res: FastifyReply) =
       });
     }
 
-    const stats = await AnswerUserService.getQuestionStats(Number(questionId));
+    const stats = await AnswerUserService.getQuestionStats(questionId);
     res.send(stats);
   } catch (error) {
     res.code(500).send({ 
       error: 'Erreur lors de la récupération des statistiques', 
+      message: error instanceof Error ? error.message : 'Erreur inconnue' 
+    });
+  }
+};
+
+export const getTodayQuestionStats = async (req: FastifyRequest, res: FastifyReply) => {
+  try {
+    const stats = await AnswerUserService.getTodayQuestionStats();
+    res.send({
+      message: 'Statistiques de la question du jour récupérées avec succès',
+      data: stats
+    });
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Aucune question active pour aujourd\'hui') {
+      return res.code(404).send({ 
+        error: 'Aucune question disponible', 
+        message: 'Aucune question active pour aujourd\'hui' 
+      });
+    }
+    
+    res.code(500).send({ 
+      error: 'Erreur lors de la récupération des statistiques du jour', 
       message: error instanceof Error ? error.message : 'Erreur inconnue' 
     });
   }

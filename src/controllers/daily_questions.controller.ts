@@ -6,6 +6,23 @@ export const getAllDailyQuestions = async (_req: FastifyRequest, reply: FastifyR
   reply.send(dailyQuestions);
 };
 
+export const getTodayQuestion = async (_req: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const todayQuestion = await dailyQuestionsService.getTodayQuestion();
+    if (!todayQuestion) {
+      return reply.status(404).send({ 
+        message: 'Aucune question disponible pour aujourd\'hui' 
+      });
+    }
+    reply.send(todayQuestion);
+  } catch (error: any) {
+    reply.status(500).send({ 
+      error: 'Erreur lors de la récupération de la question du jour', 
+      message: error.message 
+    });
+  }
+};
+
 export const getDailyQuestionById = async (
   req: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply

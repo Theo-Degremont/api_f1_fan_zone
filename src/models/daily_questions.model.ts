@@ -5,7 +5,7 @@ export interface IDailyQuestion extends Document {
   answer1: string;
   answer2: string;
   answer3: string;
-  answer4: string;
+  answer4?: string;
   date: Date;
   created_at: Date;
   is_active: boolean;
@@ -16,7 +16,7 @@ const DailyQuestionSchema = new Schema<IDailyQuestion>({
   answer1: { type: String, required: true },
   answer2: { type: String, required: true },
   answer3: { type: String, required: true },
-  answer4: { type: String, required: true },
+  answer4: { type: String, required: false },
   date: { type: Date, required: true },
   created_at: { type: Date, default: Date.now },
   is_active: { type: Boolean, default: true }
