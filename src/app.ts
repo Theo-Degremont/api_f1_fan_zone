@@ -78,7 +78,12 @@ app.register(swaggerUi, {
   }
 });
 
-app.register(fastifyCors);
+app.register(fastifyCors, {
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'https://f1fanzone.com'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key']
+});
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
 });
