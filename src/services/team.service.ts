@@ -2,14 +2,13 @@ import { PrismaClient, Prisma } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Validation pour les couleurs hexadécimales
 const validateHexColor = (color: string): boolean => {
   const hexColorRegex = /^#[0-9A-Fa-f]{6}$/;
   return hexColorRegex.test(color);
 };
 
 export const createTeam = async (data: Prisma.TeamCreateInput) => {
-  // Validation de la couleur
+
   if (!validateHexColor(data.color)) {
     throw new Error('Color must be in hexadecimal format (#RRGGBB)');
   }
@@ -31,6 +30,9 @@ export const createTeam = async (data: Prisma.TeamCreateInput) => {
 
 export const getAllTeams = async () => {
   return prisma.team.findMany({
+    where: {
+      date_end: null 
+    },
     include: {
       current_drivers: {
         select: {
@@ -41,6 +43,26 @@ export const getAllTeams = async () => {
         }
       }
     }
+  });
+};
+
+
+export const getAllTeamsIncludingInactive = async () => {
+  return prisma.team.findMany({
+    include: {
+      current_drivers: {
+        select: {
+          id: true,
+          name: true,
+          surname: true,
+          number: true
+        }
+      }
+    },
+    orderBy: [
+      { date_end: 'asc' }, 
+      { name: 'asc' }
+    ]
   });
 };
 
@@ -61,7 +83,6 @@ export const getTeamById = async (id: number) => {
 };
 
 export const updateTeam = async (id: number, data: Prisma.TeamUpdateInput) => {
-  // Validation de la couleur si elle est fournie
   if (data.color && typeof data.color === 'string' && !validateHexColor(data.color)) {
     throw new Error('Color must be in hexadecimal format (#RRGGBB)');
   }
