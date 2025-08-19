@@ -40,8 +40,48 @@ export const getRaceResultsByRaceId = async (raceId: number) => {
   return await prisma.raceResult.findMany({
     where: { race_id: raceId },
     include: {
-      driver: true,
-      race: true
+      driver: {
+        select: {
+          id: true,
+          name: true,
+          surname: true,
+          number: true,
+          image_url: true,
+          team_history: {
+            where: { 
+              season_start: { lte: 2025 },
+              OR: [
+                { season_end: null },
+                { season_end: { gte: 2025 } }
+              ]
+            },
+            select: {
+              team: {
+                select: {
+                  id: true,
+                  name: true,
+                  color: true
+                }
+              }
+            }
+          }
+        }
+      },
+      race: {
+        select: {
+          id: true,
+          race_name: true,
+          track_name: true,
+          country: true,
+          city: true,
+          started_at: true,
+          nb_laps: true,
+          nb_curve: true,
+          duration: true,
+          image_url: true,
+          season: true
+        }
+      }
     },
     orderBy: [
       { position: 'asc' }

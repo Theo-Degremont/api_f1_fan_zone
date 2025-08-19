@@ -28,11 +28,22 @@ export const getClassementBySeason = async (season: number) => {
           name: true,
           surname: true,
           number: true,
-          current_team: {
+          team_history: {
+            where: { 
+              season_start: { lte: season },
+              OR: [
+                { season_end: null },
+                { season_end: { gte: season } }
+              ]
+            },
             select: {
-              id: true,
-              name: true,
-              color: true
+              team: {
+                select: {
+                  id: true,
+                  name: true,
+                  color: true
+                }
+              }
             }
           }
         }
@@ -82,7 +93,13 @@ export const getSeasonStats = async (season: number) => {
     champion: champion ? {
       position: champion.position,
       points: champion.points,
-      driver: champion.driver
+      driver: {
+        id: champion.driver.id,
+        name: champion.driver.name,
+        surname: champion.driver.surname,
+        number: champion.driver.number,
+        team: champion.driver.team_history[0]?.team || null
+      }
     } : null
   };
 };
